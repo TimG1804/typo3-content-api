@@ -14,7 +14,7 @@ Thumbs.db
 
 # AI
 /.claude
-Claude.md
+CLAUDE.md
 
 # Build artifacts
 /var/
