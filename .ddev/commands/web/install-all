@@ -1,0 +1,17 @@
+#!/bin/bash
+
+## Description: Install all supported TYPO3 versions (12, 13) with the content_api extension
+## Usage: install-all
+## Example: ddev install-all
+
+echo "Installing TYPO3 12.4 LTS..."
+/mnt/ddev_config/commands/web/install-v12
+
+echo "Installing TYPO3 13.4 LTS..."
+/mnt/ddev_config/commands/web/install-v13
+
+echo ""
+echo "All TYPO3 versions installed successfully!"
+echo "  v12: https://v12.content-api.ddev.site/typo3/"
+echo "  v13: https://v13.content-api.ddev.site/typo3/"
+echo "  Credentials: admin / Joh316!!"
