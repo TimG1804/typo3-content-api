@@ -1,0 +1,4 @@
+..  This file is included by all other rst files in this documentation.
+
+..  |release| replace:: 0.1.0
+..  |extension_key| replace:: content_api

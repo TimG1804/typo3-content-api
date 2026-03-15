@@ -1,0 +1,38 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  DMF\ContentApi\:
+    resource: '../Classes/*'
+    exclude:
+      - '../Classes/Dto/*'
+      - '../Classes/Event/*'
+
+  # Tag all content element normalizers for registry collection
+  _instanceof:
+    DMF\ContentApi\Normalizer\ContentElementNormalizerInterface:
+      tags: ['content_api.content_element_normalizer']
+
+  DMF\ContentApi\Normalizer\ContentElementNormalizerRegistry:
+    arguments:
+      $normalizers: !tagged_iterator content_api.content_element_normalizer
+
+  # Interface bindings — allow third parties to override implementations
+  DMF\ContentApi\Query\PageQueryServiceInterface:
+    alias: DMF\ContentApi\Query\PageQueryService
+
+  DMF\ContentApi\Query\ContentQueryServiceInterface:
+    alias: DMF\ContentApi\Query\ContentQueryService
+
+  DMF\ContentApi\Serializer\SerializerInterface:
+    alias: DMF\ContentApi\Serializer\JsonSerializer
+
+  # Router must be shared (singleton) so RouteRegistrar and Middleware use the same instance
+  DMF\ContentApi\Routing\Router:
+    shared: true
+
+  # Make controllers public so the middleware can resolve them from the container
+  DMF\ContentApi\Controller\PageController:
+    public: true

@@ -1,0 +1,35 @@
+# Dependencies
+/vendor/
+/node_modules/
+
+# IDE
+/.idea/
+/.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# AI
+/.claude
+Claude.md
+
+# Build artifacts
+/var/
+/.Build/
+/Build/
+
+# PHPUnit
+/.phpunit.result.cache
+/.phpunit.cache/
+
+# PHP CS Fixer
+/.php-cs-fixer.cache
+
+# Composer
+composer.lock
+
+# TYPO3
+/public/

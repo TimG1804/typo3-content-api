@@ -1,0 +1,71 @@
+{
+    "name": "3m5/typo3-content-api",
+    "description": "API-first headless content API for TYPO3 — stable contracts, DTO-based responses, no TypoScript rendering",
+    "license": "GPL-3.0-or-later",
+    "type": "typo3-cms-extension",
+    "keywords": [
+        "typo3",
+        "headless",
+        "api",
+        "rest",
+        "content-api",
+        "dto"
+    ],
+    "version": "0.1.0",
+    "authors": [
+        {
+            "name": "3m5. GmbH",
+            "homepage": "https://www.3m5.de"
+        },
+        {
+            "name": "Tim Goßrau",
+            "email": "tim.gossrau@3m5.de"
+        }
+    ],
+    "homepage": "https://github.com/3m5/typo3-content-api",
+    "support": {
+        "issues": "https://github.com/3m5/typo3-content-api/issues",
+        "source": "https://github.com/3m5/typo3-content-api"
+    },
+    "require": {
+        "php": "^8.2",
+        "typo3/cms-core": "^12.4 || ^13.4",
+        "typo3/cms-frontend": "^12.4 || ^13.4",
+        "symfony/serializer": "^6.4 || ^7.0",
+        "symfony/property-access": "^6.4 || ^7.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.5 || ^11.0",
+        "typo3/testing-framework": "^8.0 || ^9.0",
+        "friendsofphp/php-cs-fixer": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "DMF\\ContentApi\\": "Classes/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "DMF\\ContentApi\\Tests\\": "Tests/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "typo3/class-alias-loader": true,
+            "typo3/cms-composer-installers": true
+        },
+        "sort-packages": true,
+        "vendor-dir": ".Build/vendor"
+    },
+    "scripts": {
+        "test": ".Build/vendor/bin/phpunit",
+        "cs-fix": ".Build/vendor/bin/php-cs-fixer fix",
+        "cs-check": ".Build/vendor/bin/php-cs-fixer fix --dry-run --diff"
+    },
+    "extra": {
+        "typo3/cms": {
+            "extension-key": "content_api",
+            "web-dir": ".Build/public"
+        }
+    }
+}
