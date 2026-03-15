@@ -135,6 +135,39 @@ services:
 
 ## Development
 
+### Local TYPO3 environment via ddev
+
+Prerequisites: [ddev](https://ddev.readthedocs.io/) installed.
+
+```bash
+# Start the environment
+ddev start
+
+# Install TYPO3 13.4 with the extension and demo content
+ddev install-v13
+
+# Install TYPO3 12.4 with the extension and demo content
+ddev install-v12
+
+# Install both versions in one step
+ddev install-all
+```
+
+After installation the sites are available at:
+
+- TYPO3 13.4: `https://v13.content-api.ddev.site/`
+- TYPO3 12.4: `https://v12.content-api.ddev.site/`
+
+Backend credentials: `admin` / `Joh316!!`
+
+The extension source is bind-mounted into the container, so any local file change is immediately active without a rebuild. To flush caches after a PHP change:
+
+```bash
+ddev exec -d /var/www/html/v13 vendor/bin/typo3 cache:flush
+```
+
+### Composer commands (no ddev required)
+
 ```bash
 # Install dependencies
 composer install

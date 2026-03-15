@@ -41,6 +41,10 @@
 - [x] `CONTRIBUTING.md` — contribution guidelines, coding standards, PR workflow
 - [x] `.php-cs-fixer.dist.php` — CS config aligned with TYPO3 coding standards
 
+### Development environment
+
+- [x] `ddev` setup for local multi-version TYPO3 development (v12 + v13, bind-mounted extension, path repository, Introduction Package demo content)
+
 ### Implementation correctness
 
 - [ ] Verify `PageQueryService` against real TYPO3 QueryBuilder API (v12 + v13)

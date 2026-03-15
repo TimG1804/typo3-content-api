@@ -41,8 +41,8 @@ Please open an issue before starting work on a new feature or a breaking change 
 
 - PHP 8.2 or higher
 - Composer 2.x
-- A working TYPO3 development environment (TYPO3 v12.4 or v13.4)
 - Git
+- [ddev](https://ddev.readthedocs.io/) (recommended for local TYPO3 testing)
 
 ---
 
@@ -55,6 +55,18 @@ composer install
 ```
 
 The vendor directory is placed under `.Build/vendor/` by design. All Composer scripts use that path.
+
+**Local TYPO3 environment (recommended for integration testing):**
+
+A ddev configuration is included. Start it and install one or both TYPO3 versions:
+
+```bash
+ddev start
+ddev install-v13    # TYPO3 13.4 at https://v13.content-api.ddev.site/
+ddev install-v12    # TYPO3 12.4 at https://v12.content-api.ddev.site/
+```
+
+The extension source is bind-mounted inside the container, so local changes are active immediately. Backend credentials: `admin` / `Joh316!!`
 
 **Run the unit test suite:**
 
