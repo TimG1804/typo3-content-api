@@ -1,0 +1,7 @@
+"tt_content"
+,"uid","pid","CType","colPos","sorting","sys_language_uid","l18n_parent","header","bodytext","hidden","deleted"
+,1,2,"text",0,256,0,0,"Heading A","<p>Body A</p>",0,0
+,2,2,"text",1,256,0,0,"Heading B","<p>Body B</p>",0,0
+,3,2,"text",0,512,0,0,"Hidden Element","<p>Hidden</p>",1,0
+,4,2,"text",0,768,1,1,"Translation of A","<p>Translated</p>",0,0
+,5,4,"text",0,256,0,0,"Services Heading","<p>Services body</p>",0,0

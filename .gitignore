@@ -16,10 +16,9 @@ Thumbs.db
 /.claude
 CLAUDE.md
 
-# Build artifacts
+# Build artifacts (composer install target)
 /var/
 /.Build/
-/Build/
 
 # PHPUnit
 /.phpunit.result.cache

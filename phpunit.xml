@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Root config: unit tests only.
+    Functional tests require a TYPO3 bootstrap and must be run via:
+        composer test:functional
+    which uses Build/phpunit/FunctionalTests.xml.
+-->
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.5/phpunit.xsd"
          bootstrap=".Build/vendor/autoload.php"
          colors="true"
          cacheDirectory=".phpunit.cache"
@@ -9,17 +15,11 @@
         <testsuite name="Unit">
             <directory>Tests/Unit</directory>
         </testsuite>
-        <testsuite name="Functional">
-            <directory>Tests/Functional</directory>
-        </testsuite>
     </testsuites>
 
     <source>
         <include>
             <directory suffix=".php">Classes</directory>
         </include>
-        <exclude>
-            <directory>Classes/Dto</directory>
-        </exclude>
     </source>
 </phpunit>

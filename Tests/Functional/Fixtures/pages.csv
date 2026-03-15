@@ -1,0 +1,6 @@
+"pages"
+,"uid","pid","title","doktype","slug","hidden","deleted","sys_language_uid","l10n_parent","tstamp","crdate","sorting"
+,1,0,"Root",1,"/",0,0,0,0,0,0,256
+,2,1,"About",1,"/about",0,0,0,0,0,0,256
+,3,1,"Contact",1,"/contact",1,0,0,0,0,0,512
+,4,1,"Services",1,"/services",0,0,0,0,0,0,768
