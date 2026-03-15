@@ -39,7 +39,9 @@ final class PageController
             return $this->errorResponse(404, 'Page not found', 'No page found for slug "' . $slug . '".');
         }
 
-        $contentElements = $this->contentQueryService->findByPageUid((int)$pageData['uid']);
+        // Pass the language uid so the content query layer can scope overlay application correctly.
+        $languageUid = $language?->getLanguageId() ?? 0;
+        $contentElements = $this->contentQueryService->findByPageUid((int)$pageData['uid'], $languageUid);
 
         $pageDto = $this->pageNormalizer->normalize($pageData, $contentElements);
 
