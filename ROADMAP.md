@@ -39,7 +39,7 @@
 
 - [x] Initial git commit — all files into version control
 - [x] `CONTRIBUTING.md` — contribution guidelines, coding standards, PR workflow
-- [ ] `.php-cs-fixer.dist.php` — CS config aligned with TYPO3 coding standards
+- [x] `.php-cs-fixer.dist.php` — CS config aligned with TYPO3 coding standards
 
 ### Implementation correctness
 
