@@ -47,9 +47,9 @@
 
 ### Implementation correctness
 
-- [ ] Verify `PageQueryService` against real TYPO3 QueryBuilder API (v12 + v13)
-- [ ] Verify `ContentQueryService` against real TYPO3 QueryBuilder API
-- [ ] Add missing `test-engineer` agent file (`.claude/agents/test-engineer.md`)
+- [x] Verify `PageQueryService` against real TYPO3 QueryBuilder API (v12 + v13)
+- [x] Verify `ContentQueryService` against real TYPO3 QueryBuilder API
+- [x] Add missing `test-engineer` agent file (`.claude/agents/test-engineer.md`)
 
 ### Content element normalizers
 

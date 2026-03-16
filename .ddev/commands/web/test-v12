@@ -1,0 +1,54 @@
+#!/bin/bash
+
+## Description: Run unit + functional tests against TYPO3 12.4 LTS (SQLite, mirrors CI)
+## Usage: test-v12
+## Example: ddev test-v12
+
+set -euo pipefail
+
+EXTENSION_DIR=/var/www/content_api
+cd "$EXTENSION_DIR"
+
+PHP_VERSION=$(php -r 'echo PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION;')
+
+echo "==> Saving current composer state..."
+cp composer.json /tmp/composer.json.test-bak
+cp composer.lock /tmp/composer.lock.test-bak
+
+cleanup() {
+    echo ""
+    echo "==> Restoring original composer state..."
+    cp /tmp/composer.json.test-bak composer.json
+    cp /tmp/composer.lock.test-bak composer.lock
+    composer install --no-progress --prefer-dist -q
+    echo "==> Restore complete."
+}
+trap cleanup EXIT
+
+echo "==> Switching to TYPO3 ^12.4..."
+# Require cms-core ^12.4 and testing-framework ^8.0 together so Composer resolves
+# all transitive typo3/* dependencies in one pass (-W / --with-all-dependencies).
+# COMPOSER_NO_AUDIT=1 disables the block-insecure policy at resolver level —
+# v12.4.x carries open advisories in the Composer database but has no patched
+# release in the ^12.4 branch, making the block useless for local test runs.
+COMPOSER_NO_AUDIT=1 composer require \
+    typo3/cms-core:"^12.4" \
+    typo3/testing-framework:"^8.0" \
+    -W --no-progress --prefer-dist
+
+echo ""
+echo "================================================================"
+echo " Unit Tests  |  PHP ${PHP_VERSION}  |  TYPO3 12.4"
+echo "================================================================"
+composer run-script test:unit
+
+echo ""
+echo "================================================================"
+echo " Functional Tests  |  PHP ${PHP_VERSION}  |  TYPO3 12.4  |  SQLite"
+echo "================================================================"
+typo3DatabaseDriver=pdo_sqlite composer run-script test:functional
+
+echo ""
+echo "================================================================"
+echo " ALL TESTS PASSED  |  PHP ${PHP_VERSION}  |  TYPO3 12.4"
+echo "================================================================"
