@@ -3,3 +3,25 @@ import.yaml
 import-db/
 sequelace.yaml
 .ddev-docker-compose-*.yaml
+
+# ddev-generated directories — do not commit
+.homeadditions/
+homeadditions/
+apache/
+db-build/
+mysql/
+nginx_full/
+php/
+providers/
+share-providers/
+traefik/
+web-entrypoint.d/
+xhprof/
+
+# ddev-generated files inside tracked directories
+commands/.gitattributes
+commands/db/
+commands/host/
+commands/web/README.txt
+web-build/Dockerfile.example
+web-build/README.txt
