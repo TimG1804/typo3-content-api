@@ -41,7 +41,7 @@ final class PageController
 
         // Pass the language uid so the content query layer can scope overlay application correctly.
         $languageUid = $language?->getLanguageId() ?? 0;
-        $contentElements = $this->contentQueryService->findByPageUid((int)$pageData['uid'], $languageUid);
+        $contentElements = $this->contentQueryService->findByPageUid((int) $pageData['uid'], $languageUid);
 
         $pageDto = $this->pageNormalizer->normalize($pageData, $contentElements);
 

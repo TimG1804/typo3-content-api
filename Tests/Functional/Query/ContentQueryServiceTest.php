@@ -67,7 +67,7 @@ final class ContentQueryServiceTest extends FunctionalTestCase
         $result = $subject->findByPageUid(2);
 
         foreach ($result as $row) {
-            self::assertSame(0, (int)$row['sys_language_uid'], 'Only sys_language_uid=0 records expected');
+            self::assertSame(0, (int) $row['sys_language_uid'], 'Only sys_language_uid=0 records expected');
         }
     }
 
@@ -81,7 +81,7 @@ final class ContentQueryServiceTest extends FunctionalTestCase
         $result = $subject->findByPageUid(2);
 
         self::assertCount(2, $result);
-        self::assertSame(0, (int)$result[0]['colPos']);
-        self::assertSame(1, (int)$result[1]['colPos']);
+        self::assertSame(0, (int) $result[0]['colPos']);
+        self::assertSame(1, (int) $result[1]['colPos']);
     }
 }

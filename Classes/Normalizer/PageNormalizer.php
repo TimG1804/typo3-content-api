@@ -25,10 +25,10 @@ final class PageNormalizer
         );
 
         return new PageDto(
-            id: (int)($pageData['uid'] ?? 0),
-            slug: (string)($pageData['slug'] ?? ''),
-            title: (string)($pageData['title'] ?? ''),
-            description: (string)($pageData['description'] ?? ''),
+            id: (int) ($pageData['uid'] ?? 0),
+            slug: (string) ($pageData['slug'] ?? ''),
+            title: (string) ($pageData['title'] ?? ''),
+            description: (string) ($pageData['description'] ?? ''),
             content: $normalizedContent,
         );
     }

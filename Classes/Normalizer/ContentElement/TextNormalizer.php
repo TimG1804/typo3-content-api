@@ -17,11 +17,11 @@ final class TextNormalizer implements ContentElementNormalizerInterface
     public function normalize(array $data): ContentElementDto
     {
         return new ContentElementDto(
-            id: (int)($data['uid'] ?? 0),
+            id: (int) ($data['uid'] ?? 0),
             type: 'text',
-            headline: (string)($data['header'] ?? ''),
+            headline: (string) ($data['header'] ?? ''),
             properties: [
-                'bodytext' => (string)($data['bodytext'] ?? ''),
+                'bodytext' => (string) ($data['bodytext'] ?? ''),
             ],
         );
     }

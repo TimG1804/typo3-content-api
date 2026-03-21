@@ -124,6 +124,9 @@ $prUrl = $githubUrl && $prNumber ? $githubUrl . '/pull/' . $prNumber : null;
                 <li><code>ddev install-v12</code> - Install TYPO3 12.4 LTS</li>
                 <li><code>ddev install-v13</code> - Install TYPO3 13.4 LTS</li>
                 <li><code>ddev install-all</code> - Install both TYPO3 versions</li>
+                <li><code>ddev test-v12</code> - Run tests against TYPO3 12.4 (SQLite)</li>
+                <li><code>ddev test-v13</code> - Run tests against TYPO3 13.4 (SQLite)</li>
+                <li><code>ddev test-all</code> - Run full local test matrix (v12 + v13)</li>
             </ul>
         </div>
     </div>

@@ -52,11 +52,11 @@ final class Router
      */
     private function matchPattern(string $pattern, string $path): ?array
     {
-        $regex = preg_replace('/\{([a-zA-Z_]+)\}/', '(?P<$1>[^/]+)', $pattern);
+        $regex = preg_replace('/\{([a-zA-Z_]+)}/', '(?P<$1>[^/]+)', $pattern);
         $regex = '#^' . $regex . '$#';
 
         if (preg_match($regex, $path, $matches)) {
-            return array_filter($matches, fn($key) => is_string($key), ARRAY_FILTER_USE_KEY);
+            return array_filter($matches, fn($key) => \is_string($key), ARRAY_FILTER_USE_KEY);
         }
 
         return null;

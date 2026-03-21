@@ -25,7 +25,7 @@ final class ContentElementNormalizerRegistryTest extends TestCase
             public function normalize(array $data): ContentElementDto
             {
                 return new ContentElementDto(
-                    id: (int)$data['uid'],
+                    id: (int) $data['uid'],
                     type: 'text',
                     headline: $data['header'],
                     properties: ['bodytext' => $data['bodytext']],

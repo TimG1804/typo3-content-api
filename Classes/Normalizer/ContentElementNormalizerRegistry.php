@@ -48,9 +48,9 @@ final class ContentElementNormalizerRegistry
     private function fallback(array $data, string $cType): ContentElementDto
     {
         return new ContentElementDto(
-            id: (int)($data['uid'] ?? 0),
+            id: (int) ($data['uid'] ?? 0),
             type: $cType,
-            headline: (string)($data['header'] ?? ''),
+            headline: (string) ($data['header'] ?? ''),
             properties: [],
         );
     }

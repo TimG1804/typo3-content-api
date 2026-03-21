@@ -33,7 +33,7 @@ final class PageQueryServiceTest extends FunctionalTestCase
 
         self::assertNotNull($result);
         self::assertIsArray($result);
-        self::assertSame(2, (int)$result['uid']);
+        self::assertSame(2, (int) $result['uid']);
         self::assertSame('/about', $result['slug']);
         self::assertSame('About', $result['title']);
     }
@@ -68,7 +68,7 @@ final class PageQueryServiceTest extends FunctionalTestCase
 
         self::assertNotNull($result);
         self::assertIsArray($result);
-        self::assertSame(2, (int)$result['uid']);
+        self::assertSame(2, (int) $result['uid']);
         self::assertSame('About', $result['title']);
     }
 

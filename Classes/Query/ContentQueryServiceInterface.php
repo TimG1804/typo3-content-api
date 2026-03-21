@@ -14,6 +14,7 @@ interface ContentQueryServiceInterface
      * this query when $languageUid > 0.
      *
      * @param int $languageUid The target language uid. Passed through for callers that apply overlays.
+     *
      * @return array<int, array<string, mixed>> Raw tt_content records, sorted by colPos then sorting
      */
     public function findByPageUid(int $pageUid, int $languageUid = 0): array;

@@ -28,12 +28,12 @@ final class NavigationNormalizer
         $children = $item['children'] ?? [];
 
         return new NavigationItemDto(
-            id: (int)($item['uid'] ?? 0),
-            title: (string)($item['title'] ?? ''),
-            slug: (string)($item['slug'] ?? ''),
-            url: (string)($item['url'] ?? ''),
-            active: (bool)($item['active'] ?? false),
-            current: (bool)($item['current'] ?? false),
+            id: (int) ($item['uid'] ?? 0),
+            title: (string) ($item['title'] ?? ''),
+            slug: (string) ($item['slug'] ?? ''),
+            url: (string) ($item['url'] ?? ''),
+            active: (bool) ($item['active'] ?? false),
+            current: (bool) ($item['current'] ?? false),
             children: array_map($this->normalizeItem(...), $children),
         );
     }

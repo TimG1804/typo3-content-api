@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace DMF\ContentApi\Tests\Unit\Normalizer;
 
-use DMF\ContentApi\Dto\ContentElementDto;
 use DMF\ContentApi\Normalizer\ContentElementNormalizerRegistry;
 use DMF\ContentApi\Normalizer\PageNormalizer;
 use PHPUnit\Framework\Attributes\Test;

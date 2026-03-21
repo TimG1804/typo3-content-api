@@ -7,11 +7,11 @@ namespace DMF\ContentApi\Middleware;
 use DMF\ContentApi\Dto\ErrorDto;
 use DMF\ContentApi\Routing\Router;
 use DMF\ContentApi\Serializer\SerializerInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Psr\Container\ContainerInterface;
 use TYPO3\CMS\Core\Http\JsonResponse;
 
 final class ApiRoutingMiddleware implements MiddlewareInterface
