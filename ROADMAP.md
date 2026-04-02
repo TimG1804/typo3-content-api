@@ -71,7 +71,7 @@
 
 ### Backend UX
 
-- [ ] Backend info panel (EXT:info integration) — shows readonly API URL (`GET /api/v1/pages/{slug}`) in TYPO3 page properties Info tab. Design must allow future endpoints (navigation, media) to register their own info entries.
+- [ ] Backend info panel — readonly TCA field on the `pages` table showing the API URL (`GET /api/v1/pages/{slug}`), populated via a TCA `DataProvider`. Design must allow future endpoints (navigation, media) to register their own info entries.
 
 ### Git
 
