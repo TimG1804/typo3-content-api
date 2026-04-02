@@ -47,7 +47,7 @@ final class PageController
 
         $meta = new MetaDto(
             apiVersion: self::API_VERSION,
-            language: $language?->getTwoLetterIsoCode() ?? 'en',
+            language: $this->resolveLanguageCode($language),
             site: $siteIdentifier,
         );
 
@@ -58,6 +58,27 @@ final class PageController
             200,
             ['Content-Type' => 'application/json'],
         );
+    }
+
+    /**
+     * Resolves the two-letter ISO language code from a SiteLanguage instance.
+     *
+     * getTwoLetterIsoCode() was deprecated in TYPO3 v12.1 and removed in v13.
+     * In v13, the equivalent is getLocale()->getLanguageCode().
+     *
+     * @param mixed $language SiteLanguage|null
+     */
+    private function resolveLanguageCode(mixed $language): string
+    {
+        if ($language === null) {
+            return 'en';
+        }
+        // TYPO3 v13+: getLocale() returns a Locale object with getLanguageCode()
+        // TYPO3 v12:  getTwoLetterIsoCode() is the equivalent method
+        if (method_exists($language, 'getTwoLetterIsoCode')) {
+            return $language->getTwoLetterIsoCode();
+        }
+        return $language->getLocale()->getLanguageCode();
     }
 
     private function errorResponse(int $status, string $error, string $message): ResponseInterface
