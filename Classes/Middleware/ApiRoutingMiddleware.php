@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DMF\ContentApi\Middleware;
 
 use DMF\ContentApi\Dto\ErrorDto;
+use DMF\ContentApi\Routing\RouteRegistrar;
 use DMF\ContentApi\Routing\Router;
 use DMF\ContentApi\Serializer\SerializerInterface;
 use Psr\Container\ContainerInterface;
@@ -20,6 +21,7 @@ final class ApiRoutingMiddleware implements MiddlewareInterface
         private readonly Router $router,
         private readonly SerializerInterface $serializer,
         private readonly ContainerInterface $container,
+        RouteRegistrar $routeRegistrar,
     ) {}
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
