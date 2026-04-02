@@ -40,11 +40,11 @@ vendor/bin/typo3 extension:activate content_api
 
 All endpoints are served under `/api/v1/` relative to your TYPO3 site base URL.
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/v1/pages/{slug}` | Page content with all content elements |
-| GET | `/api/v1/navigation/{key}` | Navigation tree by menu key |
-| GET | `/api/v1/media/{uid}` | Media/file reference details |
+| Method | Endpoint | Description | Status |
+|--------|----------|-------------|--------|
+| GET | `/api/v1/pages/{slug}` | Page with SEO, access info, and all content elements | v0.1.0 |
+| GET | `/api/v1/navigation/{key}` | Navigation tree by menu key | planned v0.2.0 |
+| GET | `/api/v1/media/{uid}` | Media/file reference details | planned v0.2.0 |
 
 ### Example Response
 
@@ -57,26 +57,41 @@ GET /api/v1/pages/home
     "meta": {
         "apiVersion": "1.0",
         "language": "en",
-        "generatedAt": "2026-03-15T12:00:00+00:00"
+        "site": "main"
     },
     "page": {
-        "uid": 1,
-        "title": "Home",
+        "id": 1,
         "slug": "/home",
+        "title": "Home",
+        "navTitle": "Home",
         "doktype": 1,
-        "lastModified": "2026-03-10T08:30:00+00:00"
-    },
-    "content": [
-        {
-            "uid": 10,
-            "type": "text",
-            "colPos": 0,
-            "data": {
-                "header": "Welcome",
-                "bodytext": "<p>Hello world</p>"
+        "description": "",
+        "updatedAt": "2026-03-10T08:30:00+00:00",
+        "seo": {
+            "title": "Home — My Site",
+            "description": "Welcome to our site.",
+            "canonicalUrl": "https://example.com/home",
+            "robots": "index,follow",
+            "ogTitle": null,
+            "ogDescription": null
+        },
+        "access": {
+            "feGroup": [],
+            "starttime": null,
+            "endtime": null
+        },
+        "content": [
+            {
+                "id": 10,
+                "type": "text",
+                "headline": "Welcome",
+                "properties": {
+                    "bodytext": "<p>Hello world</p>"
+                },
+                "media": []
             }
-        }
-    ]
+        ]
+    }
 }
 ```
 
@@ -103,13 +118,14 @@ final class MyCustomNormalizer implements ContentElementNormalizerInterface
     public function normalize(array $row): ContentElementDto
     {
         return new ContentElementDto(
-            uid: $row['uid'],
+            id: (int)$row['uid'],
             type: $this->supportsCType(),
-            colPos: $row['colPos'],
-            data: [
+            headline: $row['header'] ?? '',
+            properties: [
                 'title' => $row['header'],
                 'custom_field' => $row['tx_myext_field'],
             ],
+            media: [],
         );
     }
 }

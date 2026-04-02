@@ -33,17 +33,15 @@
 
 ## Phase 1 — First Working Release (0.1.0) experimental
 
-> Goal: The page endpoint works against a real TYPO3 installation. Project is committable and taggable.
+> Goal: The page endpoint works correctly against a real TYPO3 installation including multi-language sites. Project is committable and taggable.
 
-### Immediately (before first commit)
+### Project setup
 
 - [x] Initial git commit — all files into version control
 - [x] `CONTRIBUTING.md` — contribution guidelines, coding standards, PR workflow
 - [x] `.php-cs-fixer.dist.php` — CS config aligned with TYPO3 coding standards
-
-### Development environment
-
-- [x] `ddev` setup for local multi-version TYPO3 development (v12 + v13, bind-mounted extension, path repository, Introduction Package demo content)
+- [x] `ddev` setup for local multi-version TYPO3 development (v12 + v13)
+- [x] API/E2E contract tests (35+ cases via `Tests/Api/`)
 
 ### Implementation correctness
 
@@ -51,11 +49,29 @@
 - [x] Verify `ContentQueryService` against real TYPO3 QueryBuilder API
 - [x] Add missing `test-engineer` agent file (`.claude/agents/test-engineer.md`)
 
+### Page DTO completeness
+
+- [ ] Extend `PageDto` with: `navTitle`, `doktype`, `updatedAt`
+- [ ] Add `SeoDto` nested object: `title` (seo_title fallback title), `description`, `canonicalUrl` (auto-calculated), `robots` (derived from no_index + no_follow), `ogTitle`, `ogDescription` — nullable if EXT:seo not installed
+- [ ] Add `AccessDto` nested object: `feGroup` (array of GIDs), `starttime` (nullable), `endtime` (nullable)
+
+### Multi-language support
+
+- [ ] Derive active language from TYPO3 `SiteInterface` + request URL (Site Handling API) — no magic query parameters
+- [ ] Apply language overlays in `PageQueryService`
+- [ ] Apply language overlays in `ContentQueryService`
+- [ ] `MetaDto` returns resolved language identifier
+
 ### Content element normalizers
 
 - [x] `TextmediaNormalizer` (CType `textmedia`)
 - [ ] `ImageNormalizer` (CType `image`)
+- [ ] `HtmlNormalizer` (CType `html`)
 - [ ] Map `imageorient` integer to semantic string in `mediaPosition` (e.g. `above-center`, `intext-right`) to avoid leaking TYPO3 internal encoding into the API contract
+
+### Backend UX
+
+- [ ] Backend info panel (EXT:info integration) — shows readonly API URL (`GET /api/v1/pages/{slug}`) in TYPO3 page properties Info tab. Design must allow future endpoints (navigation, media) to register their own info entries.
 
 ### Git
 
@@ -81,7 +97,6 @@
 - [ ] Cache layer (`CacheServiceInterface` + TYPO3 Cache Framework integration)
 - [ ] Cache tags per page and content element
 - [ ] TYPO3 workspace preview support
-- [ ] Language overlay handling (multi-language sites)
 
 ---
 
