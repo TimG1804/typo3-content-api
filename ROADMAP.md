@@ -53,8 +53,9 @@
 
 ### Content element normalizers
 
-- [ ] `TextmediaNormalizer` (CType `textmedia`)
+- [x] `TextmediaNormalizer` (CType `textmedia`)
 - [ ] `ImageNormalizer` (CType `image`)
+- [ ] Map `imageorient` integer to semantic string in `mediaPosition` (e.g. `above-center`, `intext-right`) to avoid leaking TYPO3 internal encoding into the API contract
 
 ### Git
 
