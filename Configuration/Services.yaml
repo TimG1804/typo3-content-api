@@ -26,6 +26,9 @@ services:
   DMF\ContentApi\Query\ContentQueryServiceInterface:
     alias: DMF\ContentApi\Query\ContentQueryService
 
+  DMF\ContentApi\Query\MediaQueryServiceInterface:
+    alias: DMF\ContentApi\Query\MediaQueryService
+
   DMF\ContentApi\Serializer\SerializerInterface:
     alias: DMF\ContentApi\Serializer\JsonSerializer
 
