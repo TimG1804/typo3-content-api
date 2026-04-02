@@ -1,0 +1,35 @@
+identifier: api-test-site
+rootPageId: 5000
+base: __BASE_URL__
+websiteTitle: 'API Test Site'
+
+languages:
+  -
+    title: English
+    enabled: true
+    languageId: 0
+    base: /en/
+    locale: en_US.UTF-8
+    iso-639-1: en
+    navigationTitle: English
+    hreflang: en-US
+    direction: ''
+    flag: us
+    typo3Language: default
+  -
+    title: German
+    enabled: true
+    languageId: 1
+    base: /de/
+    locale: de_DE.UTF-8
+    iso-639-1: de
+    navigationTitle: Deutsch
+    hreflang: de-DE
+    direction: ''
+    flag: de
+    typo3Language: de
+    fallbackType: fallback
+    fallbacks: '0'
+
+errorHandling: []
+routes: []
