@@ -1,0 +1,25 @@
+#!/bin/bash
+
+## Description: Run API/E2E tests against the running DDEV TYPO3 v13 instance
+## Usage: test-api
+## Example: ddev test-api
+
+set -euo pipefail
+
+EXTENSION_DIR=/var/www/content_api
+cd "$EXTENSION_DIR"
+
+export CONTENT_API_BASE_URL="https://v13.content-api.ddev.site"
+
+echo ""
+echo "================================================================"
+echo " API Tests  |  Target: ${CONTENT_API_BASE_URL}"
+echo "================================================================"
+echo ""
+
+.Build/vendor/bin/phpunit --configuration phpunit.xml --testsuite Api
+
+echo ""
+echo "================================================================"
+echo " API TESTS DONE"
+echo "================================================================"

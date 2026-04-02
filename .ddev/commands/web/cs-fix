@@ -1,0 +1,9 @@
+#!/bin/bash
+
+## Description: Run PHP CS Fixer — fix all code style violations
+## Usage: cs-fix
+
+set -euo pipefail
+
+cd /var/www/content_api
+php .Build/vendor/bin/php-cs-fixer fix --diff

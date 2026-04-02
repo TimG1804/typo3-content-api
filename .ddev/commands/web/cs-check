@@ -1,0 +1,9 @@
+#!/bin/bash
+
+## Description: Run PHP CS Fixer in dry-run mode — show violations without fixing
+## Usage: cs-check
+
+set -euo pipefail
+
+cd /var/www/content_api
+php .Build/vendor/bin/php-cs-fixer fix --dry-run --diff

@@ -1,0 +1,56 @@
+#!/bin/bash
+
+## Description: Load API test fixtures (pages + content elements) into the TYPO3 MySQL DB
+## Usage: setup-api-fixtures [v12|v13]
+## Example: ddev setup-api-fixtures v13
+
+set -euo pipefail
+
+VERSION="${1:-v13}"
+
+if [[ "$VERSION" != "v12" && "$VERSION" != "v13" ]]; then
+    echo "ERROR: Unknown version '${VERSION}'. Use 'v12' or 'v13'."
+    exit 1
+fi
+
+EXTENSION_DIR=/var/www/content_api
+TYPO3_DIR=/var/www/html/${VERSION}
+FIXTURES_DIR="${EXTENSION_DIR}/Tests/Api/Fixtures"
+
+echo ""
+echo "================================================================"
+echo " setup-api-fixtures  |  ${VERSION}  |  DB: ${VERSION}"
+echo "================================================================"
+echo ""
+
+# ----------------------------------------------------------------
+# 1. Import pages fixture
+# ----------------------------------------------------------------
+echo "==> Importing pages fixture..."
+mysql -h db -u root -proot "${VERSION}" < "${FIXTURES_DIR}/pages.sql"
+echo "    done."
+
+# ----------------------------------------------------------------
+# 2. Import tt_content fixture
+# ----------------------------------------------------------------
+echo "==> Importing tt_content fixture..."
+mysql -h db -u root -proot "${VERSION}" < "${FIXTURES_DIR}/tt_content.sql"
+echo "    done."
+
+# ----------------------------------------------------------------
+# 3. Flush TYPO3 cache
+# ----------------------------------------------------------------
+echo "==> Flushing TYPO3 cache..."
+cd "${TYPO3_DIR}"
+vendor/bin/typo3 cache:flush
+echo "    done."
+
+echo ""
+echo "================================================================"
+echo " API test fixtures loaded for ${VERSION}"
+echo " Pages added under pid=1 (existing site root):"
+echo "   /api-test-home  /api-test-media  /api-test-hidden"
+echo ""
+echo " Run API tests with:"
+echo "   ddev test-api-${VERSION}"
+echo "================================================================"
