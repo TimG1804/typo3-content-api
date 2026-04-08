@@ -78,6 +78,7 @@ final class PageController
         if (method_exists($language, 'getTwoLetterIsoCode')) {
             return $language->getTwoLetterIsoCode();
         }
+
         return $language->getLocale()->getLanguageCode();
     }
 

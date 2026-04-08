@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace DMF\ContentApi\Middleware;
 
 use DMF\ContentApi\Dto\ErrorDto;
-use DMF\ContentApi\Routing\RouteRegistrar;
 use DMF\ContentApi\Routing\Router;
+use DMF\ContentApi\Routing\RouteRegistrar;
 use DMF\ContentApi\Serializer\SerializerInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;

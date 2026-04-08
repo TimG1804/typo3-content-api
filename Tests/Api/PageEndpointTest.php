@@ -167,7 +167,7 @@ final class PageEndpointTest extends ApiTestCase
 
         self::assertGreaterThanOrEqual(
             2,
-            count($content),
+            \count($content),
             'Fixture home page must have at least 2 content elements (text + textmedia).',
         );
     }
@@ -185,19 +185,19 @@ final class PageEndpointTest extends ApiTestCase
             );
             self::assertIsInt(
                 $element['id'],
-                sprintf('content[%d].id must be an integer.', $index),
+                \sprintf('content[%d].id must be an integer.', $index),
             );
             self::assertIsString(
                 $element['type'],
-                sprintf('content[%d].type must be a string.', $index),
+                \sprintf('content[%d].type must be a string.', $index),
             );
             self::assertIsArray(
                 $element['properties'],
-                sprintf('content[%d].properties must be an array.', $index),
+                \sprintf('content[%d].properties must be an array.', $index),
             );
             self::assertIsArray(
                 $element['media'],
-                sprintf('content[%d].media must be an array.', $index),
+                \sprintf('content[%d].media must be an array.', $index),
             );
         }
     }
@@ -369,7 +369,7 @@ final class PageEndpointTest extends ApiTestCase
 
         if ($status === 404 || $status === 500) {
             self::markTestSkipped(
-                sprintf(
+                \sprintf(
                     'German language routing returned HTTP %d for /de/%s. '
                     . 'Verify that the api-test-site config is deployed and TYPO3 '
                     . 'language routing is configured correctly.',

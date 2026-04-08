@@ -55,6 +55,7 @@ abstract class ApiTestCase extends TestCase
      * Performs a GET request and returns the decoded JSON body as an array.
      *
      * @throws \RuntimeException when the response is not HTTP 200.
+     *
      * @return array<string, mixed>
      */
     protected function getJson(string $path): array
@@ -65,7 +66,7 @@ abstract class ApiTestCase extends TestCase
 
         if ($statusCode !== 200) {
             throw new \RuntimeException(
-                sprintf('Expected HTTP 200 for GET %s, got %d.', $url, $statusCode),
+                \sprintf('Expected HTTP 200 for GET %s, got %d.', $url, $statusCode),
             );
         }
 
@@ -95,7 +96,7 @@ abstract class ApiTestCase extends TestCase
             self::assertArrayHasKey(
                 $key,
                 $data,
-                sprintf('Expected JSON structure to contain key "%s".', $key),
+                \sprintf('Expected JSON structure to contain key "%s".', $key),
             );
         }
     }
@@ -111,7 +112,7 @@ abstract class ApiTestCase extends TestCase
         if (self::$instanceReachable !== null) {
             if (!self::$instanceReachable) {
                 self::markTestSkipped(
-                    sprintf(
+                    \sprintf(
                         'DDEV instance not reachable at %s. Start DDEV to run API tests.',
                         self::getBaseUrl(),
                     ),
@@ -136,7 +137,7 @@ abstract class ApiTestCase extends TestCase
         } catch (TransportExceptionInterface $e) {
             self::$instanceReachable = false;
             self::markTestSkipped(
-                sprintf(
+                \sprintf(
                     'DDEV instance not reachable at %s (%s). Start DDEV to run API tests.',
                     self::getBaseUrl(),
                     $e->getMessage(),
