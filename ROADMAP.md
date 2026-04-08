@@ -51,9 +51,9 @@
 
 ### Page DTO completeness
 
-- [ ] Extend `PageDto` with: `navTitle`, `doktype`, `updatedAt`
-- [ ] Add `SeoDto` nested object: `title` (seo_title fallback title), `description`, `canonicalUrl` (auto-calculated), `robots` (derived from no_index + no_follow), `ogTitle`, `ogDescription` — nullable if EXT:seo not installed
-- [ ] Add `AccessDto` nested object: `feGroup` (array of GIDs), `starttime` (nullable), `endtime` (nullable)
+- [x] Extend `PageDto` with: `navTitle`, `doktype`, `updatedAt`
+- [x] Add `SeoDto` nested object: `title` (seo_title fallback title), `canonicalUrl`, `robots` (derived from no_index + no_follow), `ogTitle`, `ogDescription` — nullable if EXT:seo not installed
+- [x] Add `AccessDto` nested object: `feGroups` (array of GIDs), `starttime` (nullable), `endtime` (nullable), `extendToSubpages`
 
 ### Multi-language support
 
@@ -72,6 +72,11 @@
 ### Backend UX
 
 - [ ] Backend info panel — readonly TCA field on the `pages` table showing the API URL (`GET /api/v1/pages/{slug}`), populated via a TCA `DataProvider`. Design must allow future endpoints (navigation, media) to register their own info entries.
+
+### Release readiness
+
+- [ ] Extension icon — add `Resources/Public/Icons/Extension.svg` (required for TER upload)
+- [ ] CI matrix — add `php: 8.4` × `typo3: ^12.4` combination (TYPO3 12 supports PHP 8.4 officially)
 
 ### Git
 
