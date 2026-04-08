@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DMF\ContentApi\Tests\Unit\Serializer;
 
+use DMF\ContentApi\Dto\AccessDto;
 use DMF\ContentApi\Dto\ContentElementDto;
 use DMF\ContentApi\Dto\ErrorDto;
 use DMF\ContentApi\Dto\MetaDto;
@@ -42,7 +43,19 @@ final class JsonSerializerTest extends TestCase
         $content = [
             new ContentElementDto(id: 1, type: 'text', headline: 'Hello', properties: ['bodytext' => 'World']),
         ];
-        $page = new PageDto(id: 42, slug: '/home', title: 'Homepage', description: '', content: $content);
+        $access = new AccessDto(feGroups: [], starttime: null, endtime: null, extendToSubpages: false);
+        $page = new PageDto(
+            id: 42,
+            slug: '/home',
+            title: 'Homepage',
+            navTitle: '',
+            description: '',
+            doktype: 1,
+            updatedAt: 0,
+            seo: null,
+            access: $access,
+            content: $content,
+        );
         $response = new PageResponseDto(meta: $meta, page: $page);
 
         $json = $this->serializer->serialize($response);

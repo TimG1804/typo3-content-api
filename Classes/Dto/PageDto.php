@@ -13,7 +13,12 @@ final readonly class PageDto
         public int $id,
         public string $slug,
         public string $title,
+        public string $navTitle,
         public string $description,
+        public int $doktype,
+        public int $updatedAt,
+        public ?SeoDto $seo,
+        public AccessDto $access,
         public array $content,
     ) {}
 }
