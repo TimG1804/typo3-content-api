@@ -15,8 +15,7 @@ composer config --no-plugins allow-plugins.typo3/cms-composer-installers true -d
 composer config --no-plugins allow-plugins.typo3/class-alias-loader true -d /var/www/html/$VERSION
 composer req t3/cms:'^12' $PACKAGE_NAME:'*@dev' --no-progress -n -d /var/www/html/$VERSION
 composer req typo3/cms-extensionmanager --no-progress -n -d /var/www/html/$VERSION
-composer req --dev typo3/cms-styleguide --no-progress -n -d /var/www/html/$VERSION
-composer req typo3/cms-introduction --no-progress -n -d /var/www/html/$VERSION
+composer req typo3/cms-seo --no-progress -n -d /var/www/html/$VERSION
 
 cd /var/www/html/$VERSION
 
@@ -43,11 +42,54 @@ vendor/bin/typo3 configuration:set 'GFX/processor_path' '/usr/bin/'
 sed -i "/'deprecations'/,/^[[:space:]]*'disabled' => true,/s/'disabled' => true,/'disabled' => false,/" /var/www/html/$VERSION/config/system/settings.php
 
 vendor/bin/typo3 extension:setup
-vendor/bin/typo3 styleguide:generate
+
+# Write complete site config with English + German language
+# so language overlay tests (sys_language_uid=1) work out of the box.
+mkdir -p config/sites/main
+cat > config/sites/main/config.yaml << SITEEOF
+identifier: main
+rootPageId: 1
+base: 'https://${VERSION}.content-api.ddev.site/'
+websiteTitle: 'Content API Test'
+languages:
+  -
+    title: English
+    enabled: true
+    languageId: 0
+    base: /
+    locale: en_US.UTF-8
+    iso-639-1: en
+    navigationTitle: English
+    hreflang: en-US
+    direction: ''
+    flag: us
+    typo3Language: default
+  -
+    title: German
+    enabled: true
+    languageId: 1
+    base: /de/
+    locale: de_DE.UTF-8
+    iso-639-1: de
+    navigationTitle: Deutsch
+    hreflang: de-DE
+    direction: ''
+    flag: de
+    typo3Language: de
+    fallbackType: fallback
+    fallbacks: '0'
+errorHandling: []
+routes: []
+SITEEOF
+
+# Load API test fixtures (pages + content elements + sys_language)
+/mnt/ddev_config/commands/web/setup-api-fixtures ${VERSION}
+
 vendor/bin/typo3 cache:flush
 
 echo ""
 echo "TYPO3 $VERSION installation complete!"
 echo "Extension content_api is activated and ready."
-echo "Introduction Package installed with demo content."
+echo "API test fixtures loaded (pages 5001-5010, content 5100-5130)."
 echo "Backend: https://v12.content-api.ddev.site/typo3/ (admin / Joh316!!)"
+echo "API:     https://v12.content-api.ddev.site/api/v1/pages/api-test-home"

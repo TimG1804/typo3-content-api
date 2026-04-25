@@ -1,14 +1,22 @@
-identifier: api-test-site
-rootPageId: 5000
-base: __BASE_URL__
-websiteTitle: 'API Test Site'
+# Reference only — not deployed by DDEV install scripts.
+#
+# The actual site config is written directly by install-v12 / install-v13
+# at config/sites/main/config.yaml with rootPageId=1 and the correct
+# base URL for each TYPO3 version (v12/v13).
+#
+# This file documents the expected language structure for the test site.
+
+identifier: main
+rootPageId: 1
+base: 'https://v13.content-api.ddev.site/'
+websiteTitle: 'Content API Test'
 
 languages:
   -
     title: English
     enabled: true
     languageId: 0
-    base: /en/
+    base: /
     locale: en_US.UTF-8
     iso-639-1: en
     navigationTitle: English

@@ -24,21 +24,37 @@ echo "================================================================"
 echo ""
 
 # ----------------------------------------------------------------
-# 1. Import pages fixture
+# 1. Ensure German sys_language record exists.
+#    The sys_language table was removed in TYPO3 v13 (languages are
+#    now defined exclusively in the site config). Only insert for v12.
+# ----------------------------------------------------------------
+if mysql -h db -u root -proot "${VERSION}" -e "DESCRIBE sys_language" 2>/dev/null 1>/dev/null; then
+    echo "==> Ensuring sys_language record for German (TYPO3 v12)..."
+    mysql -h db -u root -proot "${VERSION}" -e "
+REPLACE INTO sys_language (uid, pid, title, flag, language_isocode)
+VALUES (1, 0, 'German', 'de', 'de');
+"
+    echo "    done."
+else
+    echo "==> Skipping sys_language (table not present in this TYPO3 version)."
+fi
+
+# ----------------------------------------------------------------
+# 2. Import pages fixture
 # ----------------------------------------------------------------
 echo "==> Importing pages fixture..."
 mysql -h db -u root -proot "${VERSION}" < "${FIXTURES_DIR}/pages.sql"
 echo "    done."
 
 # ----------------------------------------------------------------
-# 2. Import tt_content fixture
+# 3. Import tt_content fixture
 # ----------------------------------------------------------------
 echo "==> Importing tt_content fixture..."
 mysql -h db -u root -proot "${VERSION}" < "${FIXTURES_DIR}/tt_content.sql"
 echo "    done."
 
 # ----------------------------------------------------------------
-# 3. Flush TYPO3 cache
+# 4. Flush TYPO3 cache
 # ----------------------------------------------------------------
 echo "==> Flushing TYPO3 cache..."
 cd "${TYPO3_DIR}"
@@ -48,7 +64,7 @@ echo "    done."
 echo ""
 echo "================================================================"
 echo " API test fixtures loaded for ${VERSION}"
-echo " Pages added under pid=1 (existing site root):"
+echo " Pages added under pid=1 (site root):"
 echo "   /api-test-home  /api-test-media  /api-test-hidden"
 echo ""
 echo " Run API tests with:"

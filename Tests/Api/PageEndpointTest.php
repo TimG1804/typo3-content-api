@@ -5,6 +5,11 @@ declare(strict_types=1);
 namespace DMF\ContentApi\Tests\Api;
 
 use PHPUnit\Framework\Attributes\Test;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 /**
  * API contract tests for GET /api/v1/pages/{slug}.
@@ -19,7 +24,7 @@ use PHPUnit\Framework\Attributes\Test;
  *
  * Fixed fixture slugs used by this test class:
  *   /api-test-home   — visible page with text + textmedia content elements
- *   /api-test-media  — visible page with a textmedia content element
+ *   /api-test-media  — visible page with a textmedia content element, no_index=1
  *   /api-test-hidden — hidden page (must return 404)
  */
 final class PageEndpointTest extends ApiTestCase
@@ -30,7 +35,7 @@ final class PageEndpointTest extends ApiTestCase
     private const FIXTURE_SLUG_HOME = 'api-test-home';
 
     /**
-     * Slug of a visible fixture page that has a textmedia content element.
+     * Slug of a visible fixture page that has a textmedia content element and no_index=1.
      */
     private const FIXTURE_SLUG_MEDIA = 'api-test-media';
 
@@ -38,6 +43,8 @@ final class PageEndpointTest extends ApiTestCase
      * Slug of a hidden fixture page — must never be returned as HTTP 200.
      */
     private const FIXTURE_SLUG_HIDDEN = 'api-test-hidden';
+
+    private static ?bool $fixturesLoaded = null;
 
     protected function setUp(): void
     {
@@ -54,11 +61,27 @@ final class PageEndpointTest extends ApiTestCase
      * Verifies that the API test fixtures are loaded by checking whether the
      * fixture home page is reachable. Skips the test with a clear message when
      * the fixtures are missing, so engineers know exactly what to run.
+     *
+     * The result is cached statically so the probe runs only once per process,
+     * not once per test method.
      */
     private function skipUnlessFixturesLoaded(): void
     {
+        if (self::$fixturesLoaded !== null) {
+            if (!self::$fixturesLoaded) {
+                self::markTestSkipped(
+                    'API test fixtures not loaded. '
+                    . 'Run "ddev setup-api-fixtures" first, then re-run the API tests.',
+                );
+            }
+
+            return;
+        }
+
         $response = $this->request('GET', '/api/v1/pages/' . self::FIXTURE_SLUG_HOME);
-        if ($response->getStatusCode() !== 200) {
+        self::$fixturesLoaded = $response->getStatusCode() === 200;
+
+        if (!self::$fixturesLoaded) {
             self::markTestSkipped(
                 'API test fixtures not loaded. '
                 . 'Run "ddev setup-api-fixtures" first, then re-run the API tests.',
@@ -114,7 +137,10 @@ final class PageEndpointTest extends ApiTestCase
     {
         $body = $this->getJson('/api/v1/pages/' . self::FIXTURE_SLUG_HOME);
 
-        $this->assertJsonStructure($body['page'], ['id', 'slug', 'title', 'content']);
+        $this->assertJsonStructure($body['page'], [
+            'id', 'slug', 'title', 'navTitle', 'description',
+            'doktype', 'updatedAt', 'seo', 'access', 'content',
+        ]);
     }
 
     #[Test]
@@ -153,6 +179,203 @@ final class PageEndpointTest extends ApiTestCase
         $body = $this->getJson('/api/v1/pages/' . self::FIXTURE_SLUG_HOME);
 
         self::assertIsArray($body['page']['content'], 'page.content must be an array.');
+    }
+
+    // -------------------------------------------------------------------------
+    // PageDto extended fields (navTitle, description, doktype, updatedAt)
+    // -------------------------------------------------------------------------
+
+    #[Test]
+    public function pageNavTitleMatchesFixture(): void
+    {
+        $body = $this->getJson('/api/v1/pages/' . self::FIXTURE_SLUG_HOME);
+
+        self::assertIsString($body['page']['navTitle'], 'page.navTitle must be a string.');
+        self::assertSame('Home Nav', $body['page']['navTitle'], 'page.navTitle must match fixture value.');
+    }
+
+    #[Test]
+    public function pageDescriptionMatchesFixture(): void
+    {
+        $body = $this->getJson('/api/v1/pages/' . self::FIXTURE_SLUG_HOME);
+
+        self::assertIsString($body['page']['description'], 'page.description must be a string.');
+        self::assertSame(
+            'Meta description for API Test Home',
+            $body['page']['description'],
+            'page.description must match fixture value.',
+        );
+    }
+
+    #[Test]
+    public function pageDokypeIsInteger(): void
+    {
+        $body = $this->getJson('/api/v1/pages/' . self::FIXTURE_SLUG_HOME);
+
+        self::assertIsInt($body['page']['doktype'], 'page.doktype must be an integer.');
+        self::assertSame(1, $body['page']['doktype'], 'Fixture page doktype must be 1 (Standard).');
+    }
+
+    #[Test]
+    public function pageUpdatedAtIsInteger(): void
+    {
+        $body = $this->getJson('/api/v1/pages/' . self::FIXTURE_SLUG_HOME);
+
+        self::assertIsInt($body['page']['updatedAt'], 'page.updatedAt must be an integer.');
+    }
+
+    // -------------------------------------------------------------------------
+    // SeoDto contract
+    // -------------------------------------------------------------------------
+
+    #[Test]
+    public function pageSeoContainsRequiredFields(): void
+    {
+        $body = $this->getJson('/api/v1/pages/' . self::FIXTURE_SLUG_HOME);
+        $seo = $body['page']['seo'];
+
+        if ($seo === null) {
+            self::markTestSkipped('page.seo is null — EXT:seo is not installed in this TYPO3 instance.');
+        }
+
+        $this->assertJsonStructure($seo, ['title', 'robots', 'canonicalUrl', 'ogTitle', 'ogDescription']);
+    }
+
+    #[Test]
+    public function pageSeoTitleMatchesFixture(): void
+    {
+        $body = $this->getJson('/api/v1/pages/' . self::FIXTURE_SLUG_HOME);
+        $seo = $body['page']['seo'];
+
+        if ($seo === null) {
+            self::markTestSkipped('page.seo is null — EXT:seo is not installed in this TYPO3 instance.');
+        }
+
+        self::assertSame(
+            'API Test Home – SEO Title',
+            $seo['title'],
+            'seo.title must match the seo_title fixture value.',
+        );
+    }
+
+    #[Test]
+    public function pageSeoRobotsIsIndexFollowForHomePage(): void
+    {
+        $body = $this->getJson('/api/v1/pages/' . self::FIXTURE_SLUG_HOME);
+        $seo = $body['page']['seo'];
+
+        if ($seo === null) {
+            self::markTestSkipped('page.seo is null — EXT:seo is not installed in this TYPO3 instance.');
+        }
+
+        self::assertSame(
+            'index,follow',
+            $seo['robots'],
+            'seo.robots must be "index,follow" for a page with no_index=0 and no_follow=0.',
+        );
+    }
+
+    #[Test]
+    public function pageSeoRobotsIsNoindexFollowForMediaPage(): void
+    {
+        $body = $this->getJson('/api/v1/pages/' . self::FIXTURE_SLUG_MEDIA);
+        $seo = $body['page']['seo'];
+
+        if ($seo === null) {
+            self::markTestSkipped('page.seo is null — EXT:seo is not installed in this TYPO3 instance.');
+        }
+
+        self::assertSame(
+            'noindex,follow',
+            $seo['robots'],
+            'seo.robots must be "noindex,follow" for a page with no_index=1.',
+        );
+    }
+
+    #[Test]
+    public function pageSeoOgTitleMatchesFixture(): void
+    {
+        $body = $this->getJson('/api/v1/pages/' . self::FIXTURE_SLUG_HOME);
+        $seo = $body['page']['seo'];
+
+        if ($seo === null) {
+            self::markTestSkipped('page.seo is null — EXT:seo is not installed in this TYPO3 instance.');
+        }
+
+        self::assertSame('OG Title for Home', $seo['ogTitle'], 'seo.ogTitle must match fixture value.');
+    }
+
+    #[Test]
+    public function pageSeoCanonicalUrlIsNullWhenNotSet(): void
+    {
+        $body = $this->getJson('/api/v1/pages/' . self::FIXTURE_SLUG_HOME);
+        $seo = $body['page']['seo'];
+
+        if ($seo === null) {
+            self::markTestSkipped('page.seo is null — EXT:seo is not installed in this TYPO3 instance.');
+        }
+
+        self::assertNull($seo['canonicalUrl'], 'seo.canonicalUrl must be null when canonical_link is empty.');
+    }
+
+    // -------------------------------------------------------------------------
+    // AccessDto contract
+    // -------------------------------------------------------------------------
+
+    #[Test]
+    public function pageAccessContainsRequiredFields(): void
+    {
+        $body = $this->getJson('/api/v1/pages/' . self::FIXTURE_SLUG_HOME);
+
+        $this->assertJsonStructure(
+            $body['page']['access'],
+            ['feGroups', 'starttime', 'endtime', 'extendToSubpages'],
+        );
+    }
+
+    #[Test]
+    public function pageAccessFeGroupsIsEmptyArrayForPublicPage(): void
+    {
+        $body = $this->getJson('/api/v1/pages/' . self::FIXTURE_SLUG_HOME);
+
+        self::assertSame(
+            [],
+            $body['page']['access']['feGroups'],
+            'access.feGroups must be an empty array for a page without frontend group restriction.',
+        );
+    }
+
+    #[Test]
+    public function pageAccessStarttimeIsNullWhenNotSet(): void
+    {
+        $body = $this->getJson('/api/v1/pages/' . self::FIXTURE_SLUG_HOME);
+
+        self::assertNull(
+            $body['page']['access']['starttime'],
+            'access.starttime must be null when not configured.',
+        );
+    }
+
+    #[Test]
+    public function pageAccessEndtimeIsNullWhenNotSet(): void
+    {
+        $body = $this->getJson('/api/v1/pages/' . self::FIXTURE_SLUG_HOME);
+
+        self::assertNull(
+            $body['page']['access']['endtime'],
+            'access.endtime must be null when not configured.',
+        );
+    }
+
+    #[Test]
+    public function pageAccessExtendToSubpagesIsFalseByDefault(): void
+    {
+        $body = $this->getJson('/api/v1/pages/' . self::FIXTURE_SLUG_HOME);
+
+        self::assertFalse(
+            $body['page']['access']['extendToSubpages'],
+            'access.extendToSubpages must be false when not set.',
+        );
     }
 
     // -------------------------------------------------------------------------
@@ -353,17 +576,27 @@ final class PageEndpointTest extends ApiTestCase
     }
 
     // -------------------------------------------------------------------------
-    // Language routing (informational — skipped when not configured)
+    // Language routing (placeholder — skipped until implemented)
     // -------------------------------------------------------------------------
 
+    /**
+     * @throws RedirectionExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws ClientExceptionInterface
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     */
     #[Test]
     public function germanLanguagePrefixReturnsPageOrSkips(): void
     {
-        // The German language variant uses base=/de/, so the URL is /de/api-test-home.
-        // This test verifies that language routing is wired up; if the DE language
-        // is not reachable it marks the test as skipped rather than failing, because
-        // language routing depends on TYPO3 site config and server rewrite rules that
-        // may differ between v12 and v13 installations.
+        // NOTE: The correct URL pattern for language support in this API will be
+        // determined once multi-language routing is implemented (see ROADMAP Phase 1).
+        // The likely approach is Accept-Language header or a language query parameter,
+        // NOT a URL prefix like /de/api/v1/pages/{slug}.
+        //
+        // This test currently probes /de/api-test-home (TYPO3 frontend URL) and
+        // skips whenever it does not get a JSON API response. Once language routing
+        // is implemented, the URL and assertion should be updated accordingly.
         $response = $this->request('GET', '/de/' . self::FIXTURE_SLUG_HOME);
         $status = $response->getStatusCode();
 
@@ -371,11 +604,19 @@ final class PageEndpointTest extends ApiTestCase
             self::markTestSkipped(
                 \sprintf(
                     'German language routing returned HTTP %d for /de/%s. '
-                    . 'Verify that the api-test-site config is deployed and TYPO3 '
-                    . 'language routing is configured correctly.',
+                    . 'Language-prefixed API routing is not yet implemented.',
                     $status,
                     self::FIXTURE_SLUG_HOME,
                 ),
+            );
+        }
+
+        // If the response is not JSON, TYPO3 frontend handled the URL (HTML response).
+        $contentType = $response->getHeaders(false)['content-type'][0] ?? '';
+        if (!str_contains($contentType, 'application/json')) {
+            self::markTestSkipped(
+                'German URL /de/api-test-home returned a non-JSON response. '
+                . 'Language-prefixed API routing is not yet implemented.',
             );
         }
 
